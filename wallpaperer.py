@@ -29,7 +29,7 @@ def downloadImage(imageUrl, localFileName):
 
 # Connect to reddit and download the subreddit front page
 r = praw.Reddit(user_agent='CHANGE THIS TO A UNIQUE VALUE') # Note: Be sure to change the user-agent to something unique.
-submissions = r.get_subreddit(targetSubreddit).get_hot(limit=25)
+submissions = r.get_subreddit(targetSubreddit).get_top_from_month(limit=25)
 # Or use one of these functions:
 #                                       .get_top_from_year(limit=25)
 #                                       .get_top_from_month(limit=25)
@@ -61,7 +61,7 @@ for submission in submissions:
                 imageFile = imageUrl[imageUrl.rfind('/') + 1:imageUrl.rfind('?')]
             else:
                 imageFile = imageUrl[imageUrl.rfind('/') + 1:]
-            localFileName = 'reddit_%s_%s_album_%s_imgur_%s' % (targetSubreddit, submission.id, albumId, imageFile)
+            localFileName = '%s' % (imageFile)
             downloadImage('http:' + match['href'], localFileName)
 
     elif 'http://i.imgur.com/' in submission.url:
@@ -73,7 +73,7 @@ for submission in submissions:
             # The regex doesn't catch a "?" at the end of the filename, so we remove it here.
             imgurFilename = imgurFilename[:imgurFilename.find('?')]
 
-        localFileName = 'reddit_%s_%s_album_None_imgur_%s' % (targetSubreddit, submission.id, imgurFilename)
+        localFileName = '%s' % (imgurFilename)
         downloadImage(submission.url, localFileName)
 
     elif 'http://imgur.com/' in submission.url:
@@ -91,5 +91,5 @@ for submission in submissions:
         else:
             imageFile = imageUrl[imageUrl.rfind('/') + 1:]
 
-        localFileName = 'reddit_%s_%s_album_None_imgur_%s' % (targetSubreddit, submission.id, imageFile)
+        localFileName = '%s' % (imageFile)
         downloadImage(imageUrl, localFileName)
